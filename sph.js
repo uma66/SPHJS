@@ -351,13 +351,13 @@ function calcKernelCoefSpline(d, type) {
         	}
         	break;
         case 2: // 勾配
-        	switch(DIMENSION) {
-        		case 1: coefNum = 3/( 2*Math.pow(SCOPE_H, 3) );				break;
-        		case 2: coefNum = 45/( 14*Math.PI * Math.pow(SCOPE_H, 4) );	break;
-        		case 3: coefNum = 9/( 4*Math.PI * Math.pow(SCOPE_H, 5) );	break;
-        	}
-        	break;
-		case 3: // ラプラシアン
+          switch(DIMENSION) {
+          	case 1: coefNum = 3/( 2*Math.pow(SCOPE_H, 3) );				break;
+          	case 2: coefNum = 45/( 14*Math.PI * Math.pow(SCOPE_H, 4) );	break;
+          	case 3: coefNum = 9/( 4*Math.PI * Math.pow(SCOPE_H, 5) );	break;
+          }
+          break;
+        case 3: // ラプラシアン
             switch(DIMENSION) {
             	case 1: coefNum = 1/( 2*Math.PI * Math.pow(SCOPE_H, 3) );	break;	
             	case 2: coefNum = 45/( 42*Math.PI * Math.pow(SCOPE_H, 4) ); break;
