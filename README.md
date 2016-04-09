@@ -1,5 +1,5 @@
 # SPHJS
 
-# Fluid calculation algorithm  by SPH method
+# Fluid calculation by SPH algorithm.
 
 # Do not work・・!!
