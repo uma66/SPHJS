@@ -3,31 +3,31 @@ var canvas;
 var ctx;
 
 // 画面サイズ
-var WINDOW_L_SIDE 	    = 7.5;
-var WINDOW_R_SIDE 	    = 585;
-var WINDOW_TOP 		    = WINDOW_L_SIDE;
-var WINDOW_UNDER 	    = WINDOW_R_SIDE;
-var DIMENSION		    = 2;	// 2次元 or 3次元
+var WINDOW_L_SIDE   = 7.5;
+var WINDOW_R_SIDE   = 585;
+var WINDOW_TOP      = WINDOW_L_SIDE;
+var WINDOW_UNDER    = WINDOW_R_SIDE;
+var DIMENSION       = 2;	// 2次元 or 3次元
 
-var PARTICLES_NUM 	    = 300;	// 粒子数
-var particles 		    = new Array(PARTICLES_NUM);
-var PARTICLE_RADIUS     = 4;	// 粒子の半径
-var SCOPE_H 		    = 30;	// 近傍探索範囲
+var PARTICLES_NUM   = 300;	// 粒子数
+var particles       = new Array(PARTICLES_NUM);
+var PARTICLE_RADIUS = 4;	// 粒子の半径
+var SCOPE_H         = 30;	// 近傍探索範囲
 
-var polyCoef		    = 0.0;	// poly6カーネル係数
-var spikyCoef		    = 0.0;	// Spikyカーネル係数
-var MASS			    = 0.04;
+var polyCoef        = 0.0;	// poly6カーネル係数
+var spikyCoef       = 0.0;	// Spikyカーネル係数
+var MASS            = 0.04;
 
 window.onload = function() {
     for (i = 0; i < particles.length; i++) {
        // 粒子オブジェクト生成
        this.particles[i] = {
-    		x: 		WINDOW_L_SIDE + Math.floor(Math.random() * WINDOW_R_SIDE),
-    		y: 		WINDOW_TOP + Math.floor(Math.random() * WINDOW_UNDER),
-    		vx: 	0,
-    		vy: 	0,
+    		x: 	    WINDOW_L_SIDE + Math.floor(Math.random() * WINDOW_R_SIDE),
+    		y: 	    WINDOW_TOP + Math.floor(Math.random() * WINDOW_UNDER),
+    		vx:     0,
+    		vy:     0,
     		radius: PARTICLE_RADIUS,
-    		dens: 	0.0,	// 密度 
+    		dens:   0.0,	// 密度 
     		press: 	0.0,	// 圧力
     	};
     }
@@ -93,26 +93,26 @@ function calcPressure(particle, prsi_i) {
 function calcKernelCoefPoly6(d, type) {
     var coefNum = 1.0;
     switch(type) {
-    	case 1: // ノーマル
-    		switch(DIMENSION) {
-    			case 2: coefNum = 4.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
-    			case 3: coefNum = 315.0/( 64.0 * Math.PI * Math.pow(SCOPE_H, 9) ); 	break;
-    		}
+      case 1: // ノーマル
+        switch(DIMENSION) {
+          case 2: coefNum = 4.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
+          case 3: coefNum = 315.0/( 64.0 * Math.PI * Math.pow(SCOPE_H, 9) ); 	break;
+        }
     		break;
-    	case 2: // 勾配
-    		switch(DIMENSION) {
-    			case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
-    			case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
-    		}
-    		break;
-    	case 3: // ラプラシアン
-    		switch(DIMENSION) {
-    			case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
-    			case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
-    		}
-    		break;
-    	default:
-    		break;
+      case 2: // 勾配
+        switch(DIMENSION) {
+          case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
+          case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
+        }
+        break;
+      case 3: // ラプラシアン
+        switch(DIMENSION) {
+          case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );			break;
+          case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
+        }
+        break;
+      default:
+        break;
     }
     return coefNum;
 }
@@ -177,26 +177,26 @@ function calcPoly6Lap(dist, coefNum) {
 function calcKernelCoefSpiky(d, type) {
     var coefNum = 1.0;
     switch(type) {
-    	case 1: // ノーマル
-    		switch(DIMENSION) {
-    			case 2: coefNum = 10.0/( Math.PI * Math.pow(SCOPE_H, 5) );	break;
-    			case 3: coefNum = 15.0/( Math.PI * Math.pow(SCOPE_H, 6) ); 	break;
-    		}
-    		break;
-    	case 2: // 勾配
-    		switch(DIMENSION) {
-    			case 2: coefNum = -30.0/( Math.PI * Math.pow(SCOPE_H, 5) );	break;
-    			case 3: coefNum = -45.0/( Math.PI * Math.pow(SCOPE_H, 6) );	break;
-    		}
-    		break;
-    	case 3: // ラプラシアン
-    		switch(DIMENSION) {
-    			case 2: coefNum = -60.0/( Math.PI * Math.pow(SCOPE_H, 5) ); break;
-    			case 3: coefNum = -90.0/( Math.PI * Math.pow(SCOPE_H, 6) ); break;
-    		}
-    		break;
-    	default:
-    		break;
+        case 1: // ノーマル
+            switch(DIMENSION) {
+                case 2: coefNum = 10.0/( Math.PI * Math.pow(SCOPE_H, 5) );	break;
+                case 3: coefNum = 15.0/( Math.PI * Math.pow(SCOPE_H, 6) ); 	break;
+            }
+            break;
+        case 2: // 勾配
+            switch(DIMENSION) {
+                case 2: coefNum = -30.0/( Math.PI * Math.pow(SCOPE_H, 5) );	break;
+                case 3: coefNum = -45.0/( Math.PI * Math.pow(SCOPE_H, 6) );	break;
+            }
+            break;
+        case 3: // ラプラシアン
+            switch(DIMENSION) {
+                case 2: coefNum = -60.0/( Math.PI * Math.pow(SCOPE_H, 5) ); break;
+                case 3: coefNum = -90.0/( Math.PI * Math.pow(SCOPE_H, 6) ); break;
+            }
+            break;
+        default:
+          break;
     }
     return coefNum;
 }
@@ -260,27 +260,26 @@ function calcSpikyLap(dist, coefNum) {
 function calcKernelCoefVisc(d, type) {
     var coefNum = 1.0;
     switch(type) {
-    	case 1: // ノーマル
-    		switch(DIMENSION) {
-    			case 2: coefNum = 10.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 2) );	break;
-    			case 3: coefNum = 15.0/( 2.0*Math.PI * Math.pow(SCOPE_H, 3) ); 	break;
-    		}
-    		break;
-
-    	case 2: // 勾配
-    		switch(DIMENSION) {
-    			case 2: coefNum = 10.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 4) );	break;
-    			case 3: coefNum = 15.0/( 2.0*Math.PI * Math.pow(SCOPE_H, 5) );	break;
-    		}
-    		break;
-    	case 3: // ラプラシアン
-    		switch(DIMENSION) {
-    			case 2: coefNum = 20.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 5) ); break;
-    			case 3: coefNum = 45.0/( Math.PI * Math.pow(SCOPE_H, 6) ); 	   break;
-    		}
-    		break;
-    	default:
-    		break;
+        case 1: // ノーマル
+            switch(DIMENSION) {
+                case 2: coefNum = 10.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 2) );	break;
+                case 3: coefNum = 15.0/( 2.0*Math.PI * Math.pow(SCOPE_H, 3) ); 	break;
+            }
+            break;
+        case 2: // 勾配
+            switch(DIMENSION) {
+                case 2: coefNum = 10.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 4) );	break;
+                case 3: coefNum = 15.0/( 2.0*Math.PI * Math.pow(SCOPE_H, 5) );	break;
+            }
+            break;
+        case 3: // ラプラシアン
+            switch(DIMENSION) {
+                case 2: coefNum = 20.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 5) ); break;
+                case 3: coefNum = 45.0/( Math.PI * Math.pow(SCOPE_H, 6) ); 	   break;
+            }
+            break;
+        default:
+            break;
     }
     return coefNum;
 }
@@ -344,24 +343,24 @@ function calcKernelCoefSpline(d, type) {
     var coefNum = 1.0;
     switch(type) {
         case 1: // ノーマル
-        	switch(DIMENSION) {
-        		case 1: coefNum = 2/( 3*SCOPE_H );							break;
-        		case 2: coefNum = 10/( 7.0*Math.PI * SCOPE_H*SCOPE_H );		break;
-        		case 3: coefNum = 1/( Math.PI * Math.pow(SCOPE_H, 3) );		break;
-        	}
+            switch(DIMENSION) {
+            		case 1: coefNum = 2/( 3*SCOPE_H );                        break;
+            		case 2: coefNum = 10/( 7.0*Math.PI * SCOPE_H*SCOPE_H );   break;
+            		case 3: coefNum = 1/( Math.PI * Math.pow(SCOPE_H, 3) );   break;
+          	}
         	break;
         case 2: // 勾配
-          switch(DIMENSION) {
-          	case 1: coefNum = 3/( 2*Math.pow(SCOPE_H, 3) );				break;
-          	case 2: coefNum = 45/( 14*Math.PI * Math.pow(SCOPE_H, 4) );	break;
-          	case 3: coefNum = 9/( 4*Math.PI * Math.pow(SCOPE_H, 5) );	break;
-          }
+            switch(DIMENSION) {
+              	case 1: coefNum = 3/( 2*Math.pow(SCOPE_H, 3) );              break;
+              	case 2: coefNum = 45/( 14*Math.PI * Math.pow(SCOPE_H, 4) );  break;
+              	case 3: coefNum = 9/( 4*Math.PI * Math.pow(SCOPE_H, 5) );    break;
+            }
           break;
         case 3: // ラプラシアン
             switch(DIMENSION) {
-            	case 1: coefNum = 1/( 2*Math.PI * Math.pow(SCOPE_H, 3) );	break;	
-            	case 2: coefNum = 45/( 42*Math.PI * Math.pow(SCOPE_H, 4) ); break;
-            	case 3: coefNum = 3/( 4*Math.PI * Math.pow(SCOPE_H, 5) ); 	break;
+              	case 1: coefNum = 1/( 2*Math.PI * Math.pow(SCOPE_H, 3) );	   break;	
+              	case 2: coefNum = 45/( 42*Math.PI * Math.pow(SCOPE_H, 4) );  break;
+              	case 3: coefNum = 3/( 4*Math.PI * Math.pow(SCOPE_H, 5) );    break;
             }
             break;
         default:
