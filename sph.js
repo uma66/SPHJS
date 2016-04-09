@@ -1,4 +1,5 @@
-﻿
+﻿'use strict';
+
 var canvas;
 var ctx;
 
@@ -11,7 +12,7 @@ var DIMENSION       = 2;    // 2次元 or 3次元
 
 var PARTICLES_NUM   = 300;	// 粒子数
 var particles       = new Array(PARTICLES_NUM);
-var PARTICLE_RADIUS = 4;	// 粒子の半径
+var PARTICLE_RADIUS = 4;  // 粒子の半径
 var SCOPE_H         = 30;	// 近傍探索範囲
 
 var polyCoef        = 0.0;	// poly6カーネル係数
@@ -27,8 +28,8 @@ window.onload = function() {
             vx:     0,
             vy:     0,
             radius: PARTICLE_RADIUS,
-            dens:   0.0,	// 密度 
-            press:  0.0,	// 圧力
+            dens:   0.0,  // 密度 
+            press:  0.0,  // 圧力
         };
     }
 
@@ -166,7 +167,6 @@ function calcPoly6Lap(dist, coefNum) {
 //-----------------------------------------------------------------------------
 // Spikyカーネル
 //-----------------------------------------------------------------------------
-
 /**
  * カーネル係数計算
  * @param 	{number} d         2:2次元 3:3次元
@@ -284,8 +284,8 @@ function calcKernelCoefVisc(d, type) {
 
 /**
  * Viscカーネル関数値の計算
- * @param 	{number} dist 			粒子間の距離
- * @param 	{number} coefNum		カーネル係数
+ * @param 	{number} dist       粒子間の距離
+ * @param 	{number} coefNum    カーネル係数
  * @return 	{number} Visc関数値
 */
 function calcViscFunc(dist, coefNum) {
@@ -341,11 +341,11 @@ function calcKernelCoefSpline(d, type) {
     switch(type) {
         case 1: // ノーマル
             switch(DIMENSION) {
-            		case 1: coefNum = 2/( 3*SCOPE_H );                        break;
-            		case 2: coefNum = 10/( 7.0*Math.PI * SCOPE_H*SCOPE_H );   break;
-            		case 3: coefNum = 1/( Math.PI * Math.pow(SCOPE_H, 3) );   break;
-          	}
-        	break;
+                case 1: coefNum = 2/( 3*SCOPE_H );                        break;
+                case 2: coefNum = 10/( 7.0*Math.PI * SCOPE_H*SCOPE_H );   break;
+                case 3: coefNum = 1/( Math.PI * Math.pow(SCOPE_H, 3) );   break;
+            }
+            break;
         case 2: // 勾配
             switch(DIMENSION) {
               	case 1: coefNum = 3/( 2*Math.pow(SCOPE_H, 3) );              break;
@@ -355,7 +355,7 @@ function calcKernelCoefSpline(d, type) {
           break;
         case 3: // ラプラシアン
             switch(DIMENSION) {
-              	case 1: coefNum = 1/( 2*Math.PI * Math.pow(SCOPE_H, 3) );	   break;	
+              	case 1: coefNum = 1/( 2*Math.PI * Math.pow(SCOPE_H, 3) );    break;	
               	case 2: coefNum = 45/( 42*Math.PI * Math.pow(SCOPE_H, 4) );  break;
               	case 3: coefNum = 3/( 4*Math.PI * Math.pow(SCOPE_H, 5) );    break;
             }
