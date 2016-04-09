@@ -11,7 +11,7 @@ var DIMENSION       = 2;	// 2次元 or 3次元
 
 var PARTICLES_NUM   = 300;	// 粒子数
 var particles       = new Array(PARTICLES_NUM);
-var PARTICLE_RADIUS   = 4;	// 粒子の半径
+var PARTICLE_RADIUS  = 4;	// 粒子の半径
 var SCOPE_H         = 30;	// 近傍探索範囲
 
 var polyCoef        = 0.0;	// poly6カーネル係数
@@ -20,31 +20,31 @@ var MASS            = 0.04;
 
 window.onload = function() {
     for (i = 0; i < particles.length; i++) {
-       // 粒子オブジェクト生成
-       this.particles[i] = {
-        x:      WINDOW_L_SIDE + Math.floor(Math.random() * WINDOW_R_SIDE),
-        y:      WINDOW_TOP + Math.floor(Math.random() * WINDOW_UNDER),
-        vx:     0,
-        vy:     0,
-        radius: PARTICLE_RADIUS,
-        dens:   0.0,	// 密度 
-        press:  0.0,	// 圧力
-      };
+         // 粒子オブジェクト生成
+         this.particles[i] = {
+            x:      WINDOW_L_SIDE + Math.floor(Math.random() * WINDOW_R_SIDE),
+            y:      WINDOW_TOP + Math.floor(Math.random() * WINDOW_UNDER),
+            vx:     0,
+            vy:     0,
+            radius: PARTICLE_RADIUS,
+            dens:   0.0,	// 密度 
+            press:  0.0,	// 圧力
+          };
     }
 
     // カーネル係数
-    polyCoef  = calcKernelCoefPoly6(2, 1);	// (2=>2次元, 1=>関数値)
+    polyCoef  = calcKernelCoefPoly6(2, 1);  // (2=>2次元, 1=>関数値)
     spikyCoef = calcKernelCoefSpiky(2, 2);  // (2=>2次元, 2=>勾配値)
 
     for (i = 0; i < particles.length; i++) {
-    	var p = particles[i];
-    	// 密度
-    	var density = calcDensity(p);
-    	// 圧力/(密度*密度)
-    	var prsi_i = p.press/(p.dens*p.dens);
-    	// 圧力
-    	var press = calcPressure(p, prsi_i);
-    	// 自圧力 = -Σ　他質量 * (自圧力+他圧力)/他密度*2 * カーネル
+        var p = particles[i];
+        // 密度
+        var density = calcDensity(p);
+        // 圧力/(密度*密度)
+        var prsi_i = p.press/(p.dens*p.dens);
+        // 圧力
+        var press = calcPressure(p, prsi_i);
+        // 自圧力 = -Σ　他質量 * (自圧力+他圧力)/他密度*2 * カーネル
     }
 }
 
@@ -59,9 +59,9 @@ function calcDistance(p1, p2) {
 function calcDensity(particle) {
     var density = 0.0;
     for (i = 0; i < particles.length; i++) {
-    	var dist = calcDistance(particle, particles[i]);
-    	// 密度 += 質量 * poly6カーネル関数値
-    	density += MASS * calcPoly6Func(dist, polyCoef);
+        var dist = calcDistance(particle, particles[i]);
+        // 密度 += 質量 * poly6カーネル関数値
+        density += MASS * calcPoly6Func(dist, polyCoef);
     }
     return density;
 }
@@ -72,10 +72,10 @@ function calcDensity(particle) {
 function calcPressure(particle, prsi_i) {
     var retPress = 0.0;
     for (i = 0; i < particles.length; i++) {
-    	var p = particles[i];
-    	var prsi_j = p.press/(p.dens*p.dens);
-    	var dist = calcDistance(particle, particles[i]);
-    	retPress += MASS * calcSpikyGrad(dist, spikyCoef, rij);
+        var p = particles[i];
+        var prsi_j = p.press/(p.dens*p.dens);
+        var dist = calcDistance(particle, particles[i]);
+        retPress += MASS * calcSpikyGrad(dist, spikyCoef, rij);
     }
     return press;
 }
@@ -86,33 +86,33 @@ function calcPressure(particle, prsi_i) {
 
 /**
  * カーネル係数計算
- * @param 	{number} d 				2:2次元 3:3次元
- * @param 	{number} type			1:ノーマル 2:勾配 3:ラプラシアン
+ * @param 	{number} d        2:2次元 3:3次元
+ * @param 	{number} type     1:ノーマル 2:勾配 3:ラプラシアン
  * @return 	{number} カーネル係数値
 */
 function calcKernelCoefPoly6(d, type) {
     var coefNum = 1.0;
     switch(type) {
-      case 1: // ノーマル
-        switch(DIMENSION) {
-          case 2: coefNum = 4.0/( Math.PI * Math.pow(SCOPE_H, 8) );           break;
-          case 3: coefNum = 315.0/( 64.0 * Math.PI * Math.pow(SCOPE_H, 9) );  break;
-        }
-        break;
+        case 1: // ノーマル
+            switch(DIMENSION) {
+                case 2: coefNum = 4.0/( Math.PI * Math.pow(SCOPE_H, 8) );           break;
+                case 3: coefNum = 315.0/( 64.0 * Math.PI * Math.pow(SCOPE_H, 9) );  break;
+            }
+            break;
       case 2: // 勾配
-        switch(DIMENSION) {
-          case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );         break;
-          case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
-        }
-        break;
+          switch(DIMENSION) {
+              case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );         break;
+              case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
+          }
+          break;
       case 3: // ラプラシアン
-        switch(DIMENSION) {
-          case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );         break;
-          case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
-        }
-        break;
+          switch(DIMENSION) {
+              case 2: coefNum = -24.0/( Math.PI * Math.pow(SCOPE_H, 8) );         break;
+              case 3: coefNum = -945.0/( 32.0 * Math.PI * Math.pow(SCOPE_H, 9) ); break;
+          }
+          break;
       default:
-        break;
+          break;
     }
     return coefNum;
 }
@@ -275,7 +275,7 @@ function calcKernelCoefVisc(d, type) {
         case 3: // ラプラシアン
             switch(DIMENSION) {
                 case 2: coefNum = 20.0/( 3.0*Math.PI * Math.pow(SCOPE_H, 5) ); break;
-                case 3: coefNum = 45.0/( Math.PI * Math.pow(SCOPE_H, 6) ); 	   break;
+                case 3: coefNum = 45.0/( Math.PI * Math.pow(SCOPE_H, 6) );     break;
             }
             break;
         default:
