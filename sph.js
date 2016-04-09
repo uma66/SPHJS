@@ -5,23 +5,23 @@ var ctx;
 // 画面サイズ
 var WINDOW_L_SIDE 	= 7.5;
 var WINDOW_R_SIDE 	= 585;
-var WINDOW_TOP 		= WINDOW_L_SIDE;
-var WINDOW_UNDER 	= WINDOW_R_SIDE;
-var DIMENSION		= 2;	// 2次元 or 3次元
+var WINDOW_TOP 		  = WINDOW_L_SIDE;
+var WINDOW_UNDER 	  = WINDOW_R_SIDE;
+var DIMENSION		    = 2;	// 2次元 or 3次元
 
 var PARTICLES_NUM 	= 300;	// 粒子数
-var particles 		= new Array(PARTICLES_NUM);
+var particles 		  = new Array(PARTICLES_NUM);
 var PARTICLE_RADIUS = 4;	// 粒子の半径
-var SCOPE_H 		= 30;	// 近傍探索範囲
+var SCOPE_H 		    = 30;	// 近傍探索範囲
 
-var polyCoef		= 0.0;	// poly6カーネル係数
-var spikyCoef		= 0.0;	// Spikyカーネル係数
-var MASS			= 0.04;
+var polyCoef		    = 0.0;	// poly6カーネル係数
+var spikyCoef		    = 0.0;	// Spikyカーネル係数
+var MASS			      = 0.04;
 
 
 window.onload = function() {
 
-	for (i = 0; i < particles.length; i++) {
+for (i = 0; i < particles.length; i++) {
 		// 粒子オブジェクト生成
 		this.particles[i] = {
 			x: 		WINDOW_L_SIDE + Math.floor(Math.random() * WINDOW_R_SIDE),
@@ -178,7 +178,7 @@ function calcPoly6Lap(dist, coefNum) {
 */
 function calcKernelCoefSpiky(d, type) {
 	var coefNum = 1.0;
-	switch(type) {
+  switch(type) {
 		case 1: // ノーマル
 			switch(DIMENSION) {
 				case 2: coefNum = 10.0/( Math.PI * Math.pow(SCOPE_H, 5) );	break;
@@ -397,13 +397,13 @@ function calcSplineFunc(dist, coefNum) {
  * @return 	{number} Spline勾配値
 */
 function calcSplineGrad(dist, coefNum, rij) {
-	var q = dist/SCOPE_H;
-	if (q >= 0.0 && q < 1.0) {
+    var q = dist/SCOPE_H;
+    if (q >= 0.0 && q < 1.0) {
         return coefNum*(q-4.0/3.0)*rij;
     } else if (q >= 1.0 && q < 2.0) {
         return -coefNum*(2.0-q)*(2.0-q)*rij/q/3.0;
     } else {
-    	return 0.0;
+        return 0.0;
     }
 }
 
@@ -415,12 +415,12 @@ function calcSplineGrad(dist, coefNum, rij) {
  * @return 	{number} Splineラプラシアン値
 */
 function calcSplineLap(dist, coefNum, d) {
-	var q = dist/SCOPE_H;
-	if (q >= 0.0 && q < 1.0) {
+    var q = dist/SCOPE_H;
+    if (q >= 0.0 && q < 1.0) {
         return coefNum*(3.0*(d+1.0)*q-4.0*d);
     } else if (q >= 1.0 && q < 2.0) {
         return coefNum*( (1.0-d)*(2.0-q)*(2.0-q)/q+2.0*(2.0-q) );
     } else {
-    	return 0.0;
+        return 0.0;
     }
 }
